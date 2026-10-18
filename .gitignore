@@ -1,0 +1,38 @@
+# Keil build output
+/MDK-ARM/balancecar_hal/
+*.o
+*.obj
+*.d
+*.dep
+*.crf
+*.axf
+*.elf
+*.hex
+*.bin
+*.map
+*.lst
+*.lnp
+*.build_log.htm
+
+# Local IDE and debugger preferences
+*.uvguix.*
+*.uvgui.*
+*.uvoptx
+*.uvopt
+*.bak
+*.bak.*
+*.tmp
+*.log
+*.scvd
+
+# OS metadata
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Local credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
