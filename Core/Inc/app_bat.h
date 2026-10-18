@@ -11,5 +11,5 @@ HAL_StatusTypeDef App_Bat_Init(void);//初始化电池采样
 uint16_t App_Bat_GetRaw(void);//获取采样数据
 uint32_t App_Bat_GetMillivolts(void);//获取电池电压，单位 mV
 float App_Bat_GetVoltage(void);//把采样数据转换成电压
-
+void App_Bat_proc(void);//对led进行控制
 #endif

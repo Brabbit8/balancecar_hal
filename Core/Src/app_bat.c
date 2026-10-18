@@ -11,9 +11,9 @@
 #include "app_bat.h"
 #include "adc.h"//获取句柄
 #include "tim.h"//获取句柄
-
 static volatile uint16_t battery_adc_raw;//全局变量电压
-
+static uint32_t lastTime=0;//记录上次led切换的时间
+static uint8_t stage=0;//上次led的状态
 HAL_StatusTypeDef App_Bat_Init(void)
 {
     HAL_StatusTypeDef status;
@@ -76,4 +76,58 @@ float App_Bat_GetVoltage(void)
 {
     return (float)App_Bat_GetRaw() * (float)APP_BAT_FULL_SCALE_MV
            / (4095.0f * 1000.0f);
+}
+//@简介:电池电压监控模块的任务切皮
+void App_Bat_proc(void)
+{
+	uint32_t battery_mv = App_Bat_GetMillivolts();
+
+	if(battery_mv >= 7900U)//满电
+	{
+		HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_SET);
+		HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,GPIO_PIN_SET);
+		HAL_GPIO_WritePin(GPIOA,GPIO_PIN_6,GPIO_PIN_SET);
+	}
+	else if(battery_mv >= 7400U)//%75的电
+	{
+		HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_SET);
+		HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,GPIO_PIN_SET);
+		HAL_GPIO_WritePin(GPIOA,GPIO_PIN_6,GPIO_PIN_RESET);
+	}
+	else if(battery_mv >= 7000U)//%50的电
+	{
+		HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_SET);
+		HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOA,GPIO_PIN_6,GPIO_PIN_RESET);
+	}
+	else if(battery_mv >= 6500U)//%25的电
+	{
+		HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOA,GPIO_PIN_6,GPIO_PIN_RESET);
+	}
+	else
+	{
+		uint32_t now=HAL_GetTick();
+		if(now-lastTime>100)
+		{
+			switch(stage)
+			{
+				case 0:
+				{HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6,GPIO_PIN_SET);
+				stage=1;
+				lastTime=now;
+				break;
+				}
+				case 1:
+				{
+				HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6,GPIO_PIN_RESET);
+				stage=0;
+				lastTime=now;
+				break;
+				}
+			}
+		}
+
+	}
 }

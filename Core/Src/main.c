@@ -107,6 +107,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     Test_Loop();
+		App_Bat_proc();
 
   }
   /* USER CODE END 3 */
