@@ -27,6 +27,9 @@
 /* USER CODE BEGIN Includes */
 #include "app_bat.h"
 #include "test.h"
+#include "app_button.h"
+#include "app_pwm.h"
+#include "pwm_test.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -93,10 +96,12 @@ int main(void)
   MX_ADC1_Init();
   MX_TIM2_Init();
   MX_USART2_UART_Init();
+  MX_TIM1_Init();
+  MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
-
-  Test_Init();
-
+	App_PWM_Init();
+	PWM_Test();
+	
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -106,7 +111,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    Test_Loop();
+    App_Button_proc();
 		App_Bat_proc();
 
   }
