@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "adc.h"
+#include "i2c.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -32,6 +33,7 @@
 #include "pwm_test.h"
 #include "encoder_test.h"
 #include "app_encoder.h"
+#include "mpu6050_test.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -100,9 +102,9 @@ int main(void)
   MX_USART2_UART_Init();
   MX_TIM1_Init();
   MX_TIM4_Init();
+  MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
-	App_Encoder_Init();
-	Encoder_T_Method_Test();
+	MPU6050_EularAngleTest();
 	
   /* USER CODE END 2 */
 
