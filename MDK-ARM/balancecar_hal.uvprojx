@@ -340,7 +340,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F103xB</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F1xx/Include;../Drivers/CMSIS/Include</IncludePath>
+              <IncludePath>../Core/Inc;../Tests;../Drivers/STM32F1xx_HAL_Driver/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F1xx/Include;../Drivers/CMSIS/Include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -405,16 +405,6 @@
               <FilePath>..\Core\Inc\app_bat.h</FilePath>
             </File>
             <File>
-              <FileName>test.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Core\Inc\test.h</FilePath>
-            </File>
-            <File>
-              <FileName>test.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\test.c</FilePath>
-            </File>
-            <File>
               <FileName>app_led.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\Src\app_led.c</FilePath>
@@ -453,6 +443,16 @@
               <FileName>app_pwm.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\Src\app_pwm.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_encoder.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\app_encoder.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_encoder.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Core\Inc\app_encoder.h</FilePath>
             </File>
             <File>
               <FileName>main.c</FileName>
@@ -540,15 +540,40 @@
               <FileType>1</FileType>
               <FilePath>../Core/Src/stm32f1xx_hal_msp.c</FilePath>
             </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Tests</GroupName>
+          <Files>
             <File>
-              <FileName>pwm_test.h</FileName>
+              <FileName>test.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Tests\test.c</FilePath>
+            </File>
+            <File>
+              <FileName>test.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Core\Inc\pwm_test.h</FilePath>
+              <FilePath>..\Tests\test.h</FilePath>
             </File>
             <File>
               <FileName>pwm_test.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Core\Src\pwm_test.c</FilePath>
+              <FilePath>..\Tests\pwm_test.c</FilePath>
+            </File>
+            <File>
+              <FileName>pwm_test.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Tests\pwm_test.h</FilePath>
+            </File>
+            <File>
+              <FileName>encoder_test.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Tests\encoder_test.c</FilePath>
+            </File>
+            <File>
+              <FileName>encoder_test.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Tests\encoder_test.h</FilePath>
             </File>
           </Files>
         </Group>
