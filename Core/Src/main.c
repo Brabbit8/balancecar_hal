@@ -30,6 +30,8 @@
 #include "app_button.h"
 #include "app_pwm.h"
 #include "pwm_test.h"
+#include "encoder_test.h"
+#include "app_encoder.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -99,8 +101,8 @@ int main(void)
   MX_TIM1_Init();
   MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
-	App_PWM_Init();
-	PWM_Test();
+	App_Encoder_Init();
+	Encoder_T_Method_Test();
 	
   /* USER CODE END 2 */
 
