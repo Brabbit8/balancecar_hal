@@ -34,6 +34,10 @@
 #include "encoder_test.h"
 #include "app_encoder.h"
 #include "mpu6050_test.h"
+#include "app_motor.h"
+#include "task.h"
+#include <stdarg.h>
+#include <stdio.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -54,12 +58,13 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+static float targetOmega;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
+static void Usart2_proc(void);
 
 /* USER CODE END PFP */
 
@@ -104,20 +109,27 @@ int main(void)
   MX_TIM4_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
-	MPU6050_EularAngleTest();
-	
+	App_Button_Init();
+	App_Encoder_Init();
+	App_PWM_Init();
+	App_Bat_Init();
+	App_Motor_Init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+		targetOmega=(HAL_GetTick()/1000)%10*2.0f;
+		App_Motor_SetOmega_L(targetOmega);
+		App_Motor_SetOmega_R(targetOmega);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
     App_Button_proc();
 		App_Bat_proc();
-
+		APP_Motor_Proc();
+		Usart2_proc();
   }
   /* USER CODE END 3 */
 }
@@ -169,7 +181,19 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+	static void Usart2_proc(void)
+	{
+		PERIODIC(10);
+		float omega_l=App_Encoder_GetSpeed_L();
+		float omega_r=App_Encoder_GetSpeed_R();
+		char buf[128];
+    int len = snprintf(buf, sizeof(buf),
+                       "%.3f,%.3f,%.3f\n", targetOmega, omega_l, omega_r);
+    if (len > 0 && len < (int)sizeof(buf))
+    {
+        HAL_UART_Transmit(&huart2, (uint8_t *)buf, (uint16_t)len, 100);
+    }
+	}
 /* USER CODE END 4 */
 
 /**
