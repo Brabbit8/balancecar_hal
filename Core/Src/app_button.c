@@ -2,6 +2,7 @@
 #include "button.h"
 #include "main.h"
 #include "app_pwm.h"
+#include "app_motor.h"
 static Button_TypeDef userKey;//用户按钮
 static void onuserkey_clicked(uint8_t clicks);
 //按钮初始化
@@ -38,6 +39,6 @@ static void onuserkey_clicked(uint8_t clicks)
 		{
 			pwm_on=0;
 		}
-		App_PWM_Cmd(pwm_on);
+		App_Motor_Cmd(pwm_on);
 	}
 }
