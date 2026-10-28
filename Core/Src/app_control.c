@@ -5,6 +5,9 @@
 #include "math.h"
 #include "app_motor.h"
 #include "delay_us.h"
+#include "app_encoder.h"
+#include "qmath.h"
+static PID_Typedef pid_velocity;
 static PID_Typedef pid_theta;
 static PID_Typedef pid_theta_dot;
 static const float g=9.8f;//重力加速度
@@ -15,6 +18,8 @@ static const float rw=0.032f;//轮胎半径
 
 void App_Control_Init(void)
 {
+	PID_Init(&pid_velocity,30.0f,1.0f,0.0f);//初始化速度环pid
+	PID_Limitconfig(&pid_velocity,0.5*g,-0.5*g);//将速度环限制
 	PID_Init(&pid_theta,4.0f,0.0f,0.0f);
 	PID_Limitconfig(&pid_theta,+12.57f,-12.57f);//将θ环限制
 	PID_Init(&pid_theta_dot,10.0f,10.0f,0.0f);
@@ -35,12 +40,25 @@ void App_Control_Proc(void)
 	float deltaT = (float)(now - lasttime) * 1.0e-6f;
 	//最低限度为五毫秒执行一次
 	PERIODIC(5);
+	//速度环初始值
+	PID_ChangeSP(&pid_velocity,0.0f);
+	
 	//保持静止要把角度设为垂直,就是0
 	PID_ChangeSP(&pid_theta,0.0f);
 	//读取传感器的数据,
-	float theta = App_MPU6050_Getpitch()*0.174533f;
-	float theta_dot =App_MPU6050_GetGX()*0.174533f;
+	float theta = App_MPU6050_Getpitch()*0.0174533f;
+	float theta_dot =App_MPU6050_GetGX()*0.0174533f;
 	
+	//读取传感器的值
+	float omega =0.5*(App_Encoder_GetSpeed_L()+App_Encoder_GetSpeed_R());
+	//计算反馈值x_dot
+	float omega2=-theta_dot*(lp+rw)/rw;
+	float omega1=omega-omega2;
+	float x_dot=omega1*rw;
+	//执行速度环pid运算
+	float theta_ref= atan(PID_Compute(&pid_velocity,x_dot)/g);
+	//改变外环的设定值
+	PID_ChangeSP(&pid_theta,theta_ref);
 	//计算外环pid的输出
 	float theta_dot_ref=PID_Compute(&pid_theta,theta);
 	//改变内环的设定值
@@ -56,3 +74,14 @@ void App_Control_Proc(void)
 	//设置轮胎转速
 	lasttime=now;
 }
+void App_Control_Reset(void)
+{
+	lasttime=0;
+	omega_ref=0;
+	
+	PID_Reset(&pid_velocity);
+	PID_Reset(&pid_theta);
+	PID_Reset(&pid_theta_dot);
+	
+}
+

@@ -3,7 +3,7 @@
 #include "main.h"
 #include "app_pwm.h"
 #include "app_motor.h"
-
+#include "app_control.h"
 static Button_TypeDef userKey;//用户按钮
 static void onuserkey_clicked(uint8_t clicks);
 //按钮初始化
@@ -29,7 +29,7 @@ static uint8_t pwm_on=0;
 //按钮的回调函数
 static void onuserkey_clicked(uint8_t clicks)
 {
-	
+	App_Control_Reset();
 	if(clicks==1)
 	{
 		if(pwm_on==0)
